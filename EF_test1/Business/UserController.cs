@@ -25,13 +25,20 @@ namespace EF_test1.Business
                     sb.AppendLine("id:" + u.userid + "\tname:" + u.name + "\tusername:" + u.username);
                 }
             }
-
-            using (var ctx = new PermissionDBEntities())
-            { 
-                
-            }
-
             return sb.ToString();
+        }
+        public string print(IList<users> myuser)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (users u in myuser)
+            {
+                sb.AppendLine("id:" + u.userid + "\tname:" + u.name + "\tusername:" + u.username);
+            } 
+            return sb.ToString();
+        }
+        public string print(users u)
+        {
+            return "id:" + u.userid + "\tname:" + u.name + "\tusername:" + u.username;
         }
         public void Insert()
         {

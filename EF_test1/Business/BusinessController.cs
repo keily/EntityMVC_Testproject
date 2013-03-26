@@ -105,6 +105,7 @@ namespace EF_test1.Business
             }
             return intAffected;
         }
+        private object sync = new object();
         /// <summary>
         /// 
         /// </summary>
@@ -114,26 +115,30 @@ namespace EF_test1.Business
         public int Update<T>(T entity, string name ) 
              where T : EntityObject
          {
-             int intAffected = 0;
-            Type type = typeof(T);
-            using (PermissionDBEntities context = new PermissionDBEntities())
-            {
-                //获取实体的Id属性
-                System.Reflection.PropertyInfo property = type.GetProperty(name);
-                object unique_id = property.GetValue(entity, null);
-                //根据Id获取上下文中的对应实体
-                EntityKey entityKey = new EntityKey("PermissionDBEntities."
-                      + type.Name, name, unique_id);
-                var objResult = context.GetObjectByKey(entityKey);
-                //更新实体属性
-                if (objResult != null)
-                    context.ApplyCurrentValues<T>(type.Name, entity);
-
-                intAffected = context.SaveChanges();
-                if (intAffected > 0)
-                    context.AcceptAllChanges();
-            }
-            return intAffected;
+             lock (sync)
+             {
+                 int intAffected = 0;
+                 Type type = typeof(T);
+                 using (PermissionDBEntities context = new PermissionDBEntities())
+                 {
+                     //获取实体的Id属性
+                     System.Reflection.PropertyInfo property = type.GetProperty(name);
+                     object unique_id = property.GetValue(entity, null);
+                     //根据Id获取上下文中的对应实体
+                     EntityKey entityKey = new EntityKey("PermissionDBEntities."
+                           + type.Name, name, unique_id);
+                     var objResult = context.GetObjectByKey(entityKey);
+                     //更新实体属性
+                     if (objResult != null)
+                     {
+                         context.ApplyCurrentValues<T>(type.Name, entity);
+                     }
+                     intAffected = context.SaveChanges();
+                     if (intAffected > 0)
+                         context.AcceptAllChanges();
+                 }
+                 return intAffected;
+             }
         }
         /// <summary>
         /// 
