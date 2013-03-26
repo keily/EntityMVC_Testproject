@@ -15,7 +15,7 @@ using System.Collections.Specialized;
 
 namespace EF_test1.Models
 {
-    public partial class role
+    public partial class role : System.Data.Objects.DataClasses.EntityObject
     {
         #region Primitive Properties
     

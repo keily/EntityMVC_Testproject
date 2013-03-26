@@ -4,31 +4,44 @@ using System.Linq;
 using System.Text;
 
 using EF_test1.Models;
+using System.Data.Objects;
 
 namespace EF_test1.Business
 {
     public class UserController
     {
-        protected users obj;
+        protected List<users> obj;
 
         public UserController()
         { }
         public string print()
         {
-            
-            return "";
+            StringBuilder sb = new StringBuilder();
+            //PermissionDBEntities is entity factory ,object-myusers can be created by PermissionDBEntities with dynmaic
+            using (var ctx = new PermissionDBEntities())
+            {
+                ObjectQuery<users> myuser = ctx.users;
+                foreach (users u in myuser) {
+                    sb.AppendLine("id:" + u.userid + "\tname:" + u.name + "\tusername:" + u.username);
+                }
+            }
+
+            using (var ctx = new PermissionDBEntities())
+            { 
+                
+            }
+
+            return sb.ToString();
         }
         public void Insert()
         {
             //create an instance belong to users
             var myusers = new users() { 
                 userid=Guid.NewGuid().ToString(),
-                username="keily",
+                username="mike",
                 passwordword="123",
-                name="张伟",
-                sex="男"
-            };
-
+                name="张伟2",
+                sex="男"            };
             //PermissionDBEntities is entity factory ,object-myusers can be created by PermissionDBEntities with dynmaic
             using (var ctx = new PermissionDBEntities()) 
             {
@@ -36,6 +49,21 @@ namespace EF_test1.Business
                 ctx.SaveChanges(); 
             }
         }
+        public void Insert2()
+        {
+            //create an instance belong to users
+            var myusers = new users()
+            {
+                userid = Guid.NewGuid().ToString(),
+                username = "mike",
+                passwordword = "123",
+                name = "张伟2",
+                sex = "男"
+            };
+            BusinessController contoller = new BusinessController();
+            contoller.Insert<users>(myusers);
+        }
+        
         public void Modify(string name)
         {
             var myusers = new users()
@@ -46,6 +74,11 @@ namespace EF_test1.Business
                 name = "张伟",
                 sex = "男"
             };
+        }
+        public void Delete2(string uid)
+        {
+            BusinessController contoller = new BusinessController();
+            contoller.Delete<users>(id: uid, name: "userid");
         }
     }
 }

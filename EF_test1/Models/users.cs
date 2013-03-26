@@ -15,7 +15,7 @@ using System.Collections.Specialized;
 
 namespace EF_test1.Models
 {
-    public partial class users
+    public partial class users : System.Data.Objects.DataClasses.EntityObject
     {
         #region Primitive Properties
     
