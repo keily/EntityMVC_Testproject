@@ -11,6 +11,11 @@ namespace EF_test1.Business
 {
     public class BusinessController
     {
+        /// <summary>
+        /// ExecuteSQL by104
+        /// </summary>
+        /// <param name="commandText"></param>
+        /// <returns></returns>
         public int ExecuteSQL(string commandText)
         {
             using (PermissionDBEntities context = new PermissionDBEntities())
@@ -131,7 +136,10 @@ namespace EF_test1.Business
                      //更新实体属性
                      if (objResult != null)
                      {
-                         context.ApplyCurrentValues<T>(type.Name, entity);
+                         //可以使用不在集合中的实体覆盖到集合中主键对应用实体上如果内存中没有主键对应的记录,会报错
+                         context.ApplyCurrentValues(type.Name, entity);
+                         //需要手动修改
+                         context.ObjectStateManager.ChangeObjectState(objResult, EntityState.Modified);
                      }
                      intAffected = context.SaveChanges();
                      if (intAffected > 0)

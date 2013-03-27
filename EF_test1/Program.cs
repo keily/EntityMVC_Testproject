@@ -42,6 +42,11 @@ namespace EF_test1
             contollerCom.Update<users>(curUser, "userid");
             Console.WriteLine("after update:" + curUser.userid);
             Console.WriteLine(contoller.print(contollerCom.Get<users>(u => u.username == "0axiugai")));
+            //manual update
+            Console.WriteLine("manual update:" + curUser.userid);
+            contoller.Modify(curUser.userid);
+            Console.WriteLine(contoller.print(contollerCom.Get<users>(u => u.userid == curUser.userid)));
+            
 
             //delete 
             Console.WriteLine("delete all:" + _guid0);

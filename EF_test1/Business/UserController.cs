@@ -70,17 +70,17 @@ namespace EF_test1.Business
             BusinessController contoller = new BusinessController();
             contoller.Insert<users>(myusers);
         }
-        
-        public void Modify(string name)
+
+        public void Modify(string id)
         {
-            var myusers = new users()
+            using (var ctx = new PermissionDBEntities())
             {
-                userid = Guid.NewGuid().ToString(),
-                username = "keily",
-                passwordword = "123",
-                name = "张伟",
-                sex = "男"
-            };
+                users myusers = ctx.users.FirstOrDefault(u => u.userid == id);
+                myusers.username = "keily_m";
+                ctx.ApplyCurrentValues("users", myusers);
+                int intAffected = ctx.SaveChanges();
+                ctx.AcceptAllChanges();
+            }
         }
         public void Delete2(string uid)
         {
